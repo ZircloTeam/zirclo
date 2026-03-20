@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zirclo — Trusted Local Trades</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #1B6B6B;
+  --teal-light: #2A8F8F;
+  --teal-pale: #E8F4F4;
+  --amber: #F5A623;
+  --amber-pale: #FEF3DC;
+  --bg: #F8F7F4;
+  --white: #FFFFFF;
+  --charcoal: #2C2C2A;
+  --mid: #6B6B68;
+  --light: #B4B2A9;
+  --border: rgba(44,44,42,0.1);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 2px 20px rgba(27,107,107,0.08);
+  --shadow-hover: 0 8px 40px rgba(27,107,107,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--charcoal);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: rgba(248,247,244,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  padding: 0 2rem;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--teal);
+  letter-spacing: -0.5px;
+}
+
+.nav-logo span { color: var(--amber); }
+
+.nav-links { display: flex; align-items: center; gap: 8px; }
+
+.nav-link {
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--mid);
+  transition: all 0.2s;
+}
+
+.nav-link:hover { background: var(--teal-pale); color: var(--teal); }
+
+.nav-cta {
+  background: var(--teal);
+  color: white;
+  padding: 9px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.nav-cta:hover { background: var(--teal-light); transform: translateY(-1px); }
+
+/* SCREENS */
+.screen { display: none; padding-top: 64px; min-height: 100vh; }
+.screen.active { display: block; }
+
+/* HERO */
+.hero {
+  padding: 80px 2rem 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--amber-pale);
+  color: var(--amber);
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hero-badge::before { content: '★'; font-size: 11px; }
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  color: var(--charcoal);
+  margin-bottom: 20px;
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--teal);
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--mid);
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--teal);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.btn-primary:hover { background: var(--teal-light); transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+
+.btn-secondary {
+  background: white;
+  color: var(--teal);
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid var(--teal);
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.btn-secondary:hover { background: var(--teal-pale); transform: translateY(-2px); }
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.stat-num {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--teal);
+}
+
+.stat-label { font-size: 13px; color: var(--mid); margin-top: 2px; }
+
+/* HERO VISUAL */
+.hero-visual {
+  position: relative;
+}
+
+.hero-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.hero-card-2 { animation-delay: 1s; animation-duration: 5s; }
+.hero-card-3 { animation-delay: 0.5s; animation-duration: 4.5s; }
+
+.trade-mini {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.trade-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.trade-name { font-weight: 500; font-size: 15px; }
+.trade-role { font-size: 13px; color: var(--mid); }
+
+.trust-score {
+  margin-left: auto;
+  background: var(--teal-pale);
+  color: var(--teal);
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.verified-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #E8F5E9; color: #2E7D32;
+  padding: 3px 8px; border-radius: 50px;
+  font-size: 11px; font-weight: 600; margin-top: 4px;
+}
+
+.job-mini {
+  background: var(--teal);
+  color: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.job-mini-label { font-size: 12px; opacity: 0.7; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.job-mini-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+.job-mini-meta { display: flex; gap: 12px; font-size: 13px; opacity: 0.8; }
+
+/* SEARCH BAR */
+.search-section {
+  background: white;
+  border-radius: var(--radius);
+  padding: 6px 6px 6px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  max-width: 640px;
+  margin: 0 auto 60px;
+}
+
+.search-section input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--charcoal);
+  background: transparent;
+}
+
+.search-section input::placeholder { color: var(--light); }
+
+.search-select {
+  border: none;
+  border-left: 1px solid var(--border);
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--mid);
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+/* CATEGORIES */
+.categories-section {
+  padding: 0 2rem 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--light);
+  margin-bottom: 20px;
+}
+
+.category-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.chip {
+  padding: 10px 18px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: white;
+  color: var(--mid);
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.chip:hover, .chip.active {
+  border-color: var(--teal);
+  background: var(--teal-pale);
+  color: var(--teal);
+}
+
+/* TRADE CARDS */
+.trades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.trade-card {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.25s;
+  cursor: pointer;
+}
+
+.trade-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.trade-card-banner {
+  height: 80px;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 20px;
+}
+
+.trade-card-avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin-bottom: -32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.trade-card-body { padding: 40px 20px 20px; }
+
+.trade-card-name {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.trade-card-role {
+  font-size: 13px;
+  color: var(--mid);
+  margin-bottom: 12px;
+}
+
+.badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+
+.badge {
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-verified { background: #E8F5E9; color: #2E7D32; }
+.badge-elite { background: var(--amber-pale); color: #B8760E; }
+.badge-cert { background: var(--teal-pale); color: var(--teal); }
+
+.trade-card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.stat-mini { text-align: center; }
+.stat-mini-val { font-size: 15px; font-weight: 600; color: var(--charcoal); }
+.stat-mini-label { font-size: 11px; color: var(--light); margin-top: 2px; }
+
+.trust-bar-wrap {
+  height: 4px;
+  background: var(--teal-pale);
+  border-radius: 2px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.trust-bar { height: 100%; background: var(--teal); border-radius: 2px; }
+
+.trade-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.price-tag { font-size: 14px; color: var(--mid); }
+.price-tag strong { color: var(--charcoal); font-size: 16px; }
+
+.btn-sm {
+  background: var(--teal);
+  color: white;
+  padding: 8px 18px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+}
+
+.btn-sm:hover { background: var(--teal-light); }
+
+/* HOW IT WORKS */
+.how-section {
+  padding: 60px 2rem;
+  background: var(--teal);
+  color: white;
+  text-align: center;
+}
+
+.how-section h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 36px;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.how-sub { opacity: 0.75; margin-bottom: 48px; font-size: 16px; }
+
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.how-step { text-align: center; }
+
+.how-icon {
+  width: 64px; height: 64px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 16px;
+}
+
+.how-title { font-weight: 600; margin-bottom: 8px; font-size: 16px; }
+.how-desc { font-size: 14px; opacity: 0.7; line-height: 1.6; }
+
+/* POST JOB FORM */
+.form-screen {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 2rem 80px;
+}
+
+.form-screen h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+
+.form-screen p { color: var(--mid); margin-bottom: 32px; font-size: 15px; }
+
+.form-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 32px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.form-group { margin-bottom: 20px; }
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--charcoal);
+  background: var(--bg);
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--teal);
+  background: white;
+}
+
+.form-group textarea { height: 100px; resize: vertical; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.form-hint { font-size: 12px; color: var(--light); margin-top: 6px; }
+
+.urgency-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.urgency-chip {
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1.5px solid var(--border);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+  color: var(--mid);
+}
+.urgency-chip.selected { border-color: var(--teal); background: var(--teal-pale); color: var(--teal); font-weight: 500; }
+
+/* TRADESPERSON PROFILE */
+.profile-screen {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 2rem 80px;
+}
+
+.profile-header {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.profile-banner {
+  height: 140px;
+  background: linear-gradient(135deg, var(--teal) 0%, #0D4444 100%);
+  position: relative;
+}
+
+.profile-banner-content {
+  position: absolute;
+  bottom: -48px;
+  left: 32px;
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.profile-avatar-lg {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  background: white;
+  border: 4px solid white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 42px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.profile-body { padding: 64px 32px 32px; }
+
+.profile-name {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+
+.profile-role { font-size: 16px; color: var(--mid); margin-bottom: 14px; }
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin: 20px 0;
+}
+
+.profile-stat-val {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--teal);
+}
+
+.profile-stat-label { font-size: 12px; color: var(--light); margin-top: 2px; }
+
+/* SKILLS GRID */
+.skills-section {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.skills-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--charcoal);
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.skill-name { font-size: 14px; font-weight: 500; min-width: 140px; }
+
+.skill-bar-wrap {
+  flex: 1;
+  height: 6px;
+  background: var(--teal-pale);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.skill-bar { height: 100%; background: var(--teal); border-radius: 3px; }
+
+.skill-level { font-size: 12px; color: var(--mid); min-width: 60px; text-align: right; }
+.skill-cert { font-size: 11px; background: #E8F5E9; color: #2E7D32; padding: 2px 8px; border-radius: 50px; font-weight: 600; }
+
+/* GALLERY */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.gallery-item {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  border: 1px solid var(--border);
+}
+
+/* REVIEWS */
+.review-card {
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.review-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.reviewer-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--teal-pale); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: var(--teal); }
+.reviewer-name { font-size: 14px; font-weight: 500; }
+.review-date { font-size: 12px; color: var(--light); margin-left: auto; }
+.stars { color: var(--amber); font-size: 13px; }
+.review-text { font-size: 14px; color: var(--mid); line-height: 1.6; }
+
+/* JOB FEED */
+.job-feed { max-width: 800px; margin: 0 auto; padding: 40px 2rem 80px; }
+.job-feed h2 { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 400; margin-bottom: 6px; }
+.job-feed > p { color: var(--mid); margin-bottom: 28px; }
+
+.job-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.job-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+
+.job-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+.job-card-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+.job-card-location { font-size: 13px; color: var(--mid); }
+
+.job-tag {
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tag-urgent { background: #FFEBEE; color: #C62828; }
+.tag-normal { background: var(--teal-pale); color: var(--teal); }
+.tag-flexible { background: var(--amber-pale); color: #B8760E; }
+
+.job-card-desc { font-size: 14px; color: var(--mid); line-height: 1.6; margin-bottom: 14px; }
+.job-card-footer { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.job-meta-pill { background: var(--bg); padding: 5px 12px; border-radius: 50px; font-size: 12px; color: var(--mid); }
+
+/* PRICING SECTION */
+.pricing-section {
+  padding: 60px 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pricing-section h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 36px;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.pricing-section p { color: var(--mid); margin-bottom: 40px; }
+
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: left; }
+
+.pricing-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  border: 1.5px solid var(--border);
+}
+
+.pricing-card.featured {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: white;
+}
+
+.pricing-tier { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--mid); margin-bottom: 8px; }
+.pricing-card.featured .pricing-tier { color: rgba(255,255,255,0.6); }
+.pricing-price { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 400; margin-bottom: 4px; }
+.pricing-period { font-size: 14px; color: var(--mid); margin-bottom: 20px; }
+.pricing-card.featured .pricing-period { color: rgba(255,255,255,0.6); }
+
+.pricing-features { list-style: none; }
+.pricing-features li { font-size: 14px; padding: 6px 0; display: flex; align-items: center; gap: 8px; color: var(--mid); }
+.pricing-card.featured .pricing-features li { color: rgba(255,255,255,0.85); }
+.pricing-features li::before { content: '✓'; font-weight: 700; color: var(--teal); }
+.pricing-card.featured .pricing-features li::before { color: var(--amber); }
+
+.free-badge {
+  background: var(--amber);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+/* ALERT TOAST */
+.alert-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--teal);
+  color: white;
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(27,107,107,0.3);
+  transform: translateX(120%);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 200;
+  max-width: 300px;
+}
+
+.alert-toast.show { transform: translateX(0); }
+.alert-toast-title { font-weight: 600; margin-bottom: 2px; }
+.alert-toast-sub { font-size: 12px; opacity: 0.75; }
+
+/* ADMIN DASH */
+.admin-screen { max-width: 1100px; margin: 0 auto; padding: 40px 2rem 80px; }
+.admin-screen h2 { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 400; margin-bottom: 28px; }
+
+.admin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+
+.admin-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  border: 1px solid var(--border);
+}
+
+.admin-card-val { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 400; color: var(--teal); }
+.admin-card-label { font-size: 13px; color: var(--mid); margin-top: 4px; }
+.admin-card-delta { font-size: 12px; color: #2E7D32; margin-top: 6px; font-weight: 500; }
+
+.admin-table-wrap {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.admin-table-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-table-title { font-size: 15px; font-weight: 600; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 12px 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--light); background: var(--bg); }
+td { padding: 14px 20px; font-size: 14px; border-top: 1px solid var(--border); }
+
+.status-pill {
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-active { background: #E8F5E9; color: #2E7D32; }
+.status-pending { background: var(--amber-pale); color: #B8760E; }
+.status-free { background: var(--teal-pale); color: var(--teal); }
+
+/* FOOTER */
+footer {
+  background: var(--charcoal);
+  color: white;
+  padding: 48px 2rem 32px;
+}
+
+.footer-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-brand { font-family: 'Fraunces', serif; font-size: 22px; color: var(--amber); margin-bottom: 12px; }
+.footer-desc { font-size: 14px; opacity: 0.5; line-height: 1.6; }
+.footer-col-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.4; margin-bottom: 16px; }
+.footer-link { display: block; font-size: 14px; opacity: 0.6; margin-bottom: 10px; cursor: pointer; transition: opacity 0.2s; }
+.footer-link:hover { opacity: 1; }
+.footer-bottom { max-width: 1100px; margin: 0 auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 13px; opacity: 0.4; }
+
+/* RESPONSE */
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; gap: 40px; }
+  .hero-visual { display: none; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .admin-grid { grid-template-columns: 1fr 1fr; }
+  .profile-stats { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Zircl<span>o</span></div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="showScreen('browse')">Find a Trade</button>
+    <button class="nav-link" onclick="showScreen('jobs')">Jobs Board</button>
+    <button class="nav-link" onclick="showScreen('pricing')">Pricing</button>
+    <button class="nav-link" onclick="showScreen('admin')">Admin</button>
+    <button class="nav-cta" onclick="showScreen('post')">Post a Job</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-badge">Now live across the UK</div>
+      <h1>Find trusted trades, <em>instantly</em> near you</h1>
+      <p class="hero-sub">Zirclo connects homeowners with verified local tradespeople — plumbers, electricians, builders, cleaners and more. Real reviews, real prices, real people.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showScreen('post')">Post a Job — It's Free</button>
+        <button class="btn-secondary" onclick="showScreen('browse')">Browse Tradespeople</button>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">2,400+</div>
+          <div class="stat-label">Verified Trades</div>
+        </div>
+        <div>
+          <div class="stat-num">18,000+</div>
+          <div class="stat-label">Jobs Completed</div>
+        </div>
+        <div>
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="job-mini hero-card">
+        <div class="job-mini-label">New job posted · 2 mins ago</div>
+        <div class="job-mini-title">Boiler service needed — Worksop</div>
+        <div class="job-mini-meta"><span>📍 S80</span><span>⚡ Urgent</span><span>💷 ~£120</span></div>
+      </div>
+      <div class="hero-card hero-card-2" style="background:white;">
+        <div class="trade-mini">
+          <div class="trade-avatar" style="background:#E8F4F4;">🔧</div>
+          <div>
+            <div class="trade-name">Dave Hartley</div>
+            <div class="trade-role">Plumber & Gas Engineer</div>
+            <span class="verified-badge">✓ Gas Safe Registered</span>
+          </div>
+          <div class="trust-score">96</div>
+        </div>
+      </div>
+      <div class="hero-card hero-card-3" style="background:white;">
+        <div class="trade-mini">
+          <div class="trade-avatar" style="background:#FEF3DC;">⚡</div>
+          <div>
+            <div class="trade-name">Sarah Chen</div>
+            <div class="trade-role">Electrician · NICEIC Certified</div>
+            <span class="verified-badge">✓ Elite Member</span>
+          </div>
+          <div class="trust-score">99</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="how-section">
+    <h2>How Zirclo works</h2>
+    <p class="how-sub">Simple for homeowners. Powerful for tradespeople.</p>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-icon">📝</div>
+        <div class="how-title">Post your job</div>
+        <div class="how-desc">Describe what you need. Takes 2 minutes. Always free for homeowners.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-icon">🔔</div>
+        <div class="how-title">Trades get alerted</div>
+        <div class="how-desc">Verified local tradespeople in your area are notified instantly.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-icon">💬</div>
+        <div class="how-title">Compare & choose</div>
+        <div class="how-desc">Review profiles, prices, certifications and trust scores.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-icon">✅</div>
+        <div class="how-title">Job done. Review left.</div>
+        <div class="how-desc">Pay securely through Zirclo. Leave a review. Build the community.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BROWSE -->
+<div id="screen-browse" class="screen">
+  <div style="padding: 40px 2rem 0; max-width: 1100px; margin: 0 auto;">
+    <h2 style="font-family:'Fraunces',serif; font-size:32px; font-weight:400; margin-bottom:6px;">Find a Tradesperson</h2>
+    <p style="color:var(--mid); margin-bottom:28px;">Browse verified local trades by skill, certification, price and trust score.</p>
+
+    <div class="search-section" style="max-width:100%; margin-bottom:24px;">
+      <input type="text" placeholder="Search by skill, name or postcode...">
+      <select class="search-select">
+        <option>All Trades</option>
+        <option>Plumber</option>
+        <option>Electrician</option>
+        <option>Builder</option>
+        <option>Cleaner</option>
+        <option>Gardener</option>
+        <option>Handyman</option>
+      </select>
+      <select class="search-select">
+        <option>Any Price</option>
+        <option>Under £30/hr</option>
+        <option>£30–£60/hr</option>
+        <option>£60+/hr</option>
+      </select>
+      <button class="btn-sm">Search</button>
+    </div>
+
+    <div class="category-chips" style="margin-bottom:28px;">
+      <div class="chip active" onclick="filterChip(this)">🔧 All</div>
+      <div class="chip" onclick="filterChip(this)">🚿 Plumbing</div>
+      <div class="chip" onclick="filterChip(this)">⚡ Electrical</div>
+      <div class="chip" onclick="filterChip(this)">🏗️ Building</div>
+      <div class="chip" onclick="filterChip(this)">🧹 Cleaning</div>
+      <div class="chip" onclick="filterChip(this)">🌿 Gardening</div>
+      <div class="chip" onclick="filterChip(this)">🔨 Handyman</div>
+      <div class="chip" onclick="filterChip(this)">🎨 Decorating</div>
+    </div>
+  </div>
+
+  <div style="padding: 0 2rem 60px; max-width: 1100px; margin: 0 auto;">
+    <div class="trades-grid" id="tradesGrid">
+
+      <div class="trade-card" onclick="showScreen('profile')">
+        <div class="trade-card-banner">
+          <div class="trade-card-avatar">🔧</div>
+        </div>
+        <div class="trade-card-body">
+          <div class="trade-card-name">Dave Hartley</div>
+          <div class="trade-card-role">Plumber & Gas Engineer · Worksop</div>
+          <div class="badges">
+            <span class="badge badge-elite">⭐ Elite</span>
+            <span class="badge badge-verified">✓ Verified</span>
+            <span class="badge badge-cert">Gas Safe</span>
+          </div>
+          <div class="trust-bar-wrap"><div class="trust-bar" style="width:96%"></div></div>
+          <div class="trade-card-stats">
+            <div class="stat-mini"><div class="stat-mini-val">4.9★</div><div class="stat-mini-label">Rating</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">142</div><div class="stat-mini-label">Jobs</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">96</div><div class="stat-mini-label">Trust</div></div>
+          </div>
+          <div class="trade-card-footer">
+            <div class="price-tag">From <strong>£60/hr</strong></div>
+            <button class="btn-sm">View Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trade-card" onclick="showScreen('profile')">
+        <div class="trade-card-banner" style="background: linear-gradient(135deg, #4A4A8A 0%, #6A6AAA 100%)">
+          <div class="trade-card-avatar">⚡</div>
+        </div>
+        <div class="trade-card-body">
+          <div class="trade-card-name">Sarah Chen</div>
+          <div class="trade-card-role">Electrician · Sheffield</div>
+          <div class="badges">
+            <span class="badge badge-elite">⭐ Elite</span>
+            <span class="badge badge-verified">✓ Verified</span>
+            <span class="badge badge-cert">NICEIC</span>
+          </div>
+          <div class="trust-bar-wrap"><div class="trust-bar" style="width:99%"></div></div>
+          <div class="trade-card-stats">
+            <div class="stat-mini"><div class="stat-mini-val">5.0★</div><div class="stat-mini-label">Rating</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">287</div><div class="stat-mini-label">Jobs</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">99</div><div class="stat-mini-label">Trust</div></div>
+          </div>
+          <div class="trade-card-footer">
+            <div class="price-tag">From <strong>£65/hr</strong></div>
+            <button class="btn-sm">View Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trade-card" onclick="showScreen('profile')">
+        <div class="trade-card-banner" style="background: linear-gradient(135deg, #5D4037 0%, #8D6E63 100%)">
+          <div class="trade-card-avatar">🏗️</div>
+        </div>
+        <div class="trade-card-body">
+          <div class="trade-card-name">Mark Okafor</div>
+          <div class="trade-card-role">Builder & Renovations · Mansfield</div>
+          <div class="badges">
+            <span class="badge badge-verified">✓ Verified</span>
+            <span class="badge badge-cert">CSCS Gold</span>
+          </div>
+          <div class="trust-bar-wrap"><div class="trust-bar" style="width:88%"></div></div>
+          <div class="trade-card-stats">
+            <div class="stat-mini"><div class="stat-mini-val">4.8★</div><div class="stat-mini-label">Rating</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">89</div><div class="stat-mini-label">Jobs</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">88</div><div class="stat-mini-label">Trust</div></div>
+          </div>
+          <div class="trade-card-footer">
+            <div class="price-tag">From <strong>£45/hr</strong></div>
+            <button class="btn-sm">View Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trade-card" onclick="showScreen('profile')">
+        <div class="trade-card-banner" style="background: linear-gradient(135deg, #2E7D32 0%, #66BB6A 100%)">
+          <div class="trade-card-avatar">🌿</div>
+        </div>
+        <div class="trade-card-body">
+          <div class="trade-card-name">Tom Bradshaw</div>
+          <div class="trade-card-role">Gardener & Landscaper · Retford</div>
+          <div class="badges">
+            <span class="badge badge-verified">✓ Verified</span>
+          </div>
+          <div class="trust-bar-wrap"><div class="trust-bar" style="width:82%"></div></div>
+          <div class="trade-card-stats">
+            <div class="stat-mini"><div class="stat-mini-val">4.7★</div><div class="stat-mini-label">Rating</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">54</div><div class="stat-mini-label">Jobs</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">82</div><div class="stat-mini-label">Trust</div></div>
+          </div>
+          <div class="trade-card-footer">
+            <div class="price-tag">From <strong>£25/hr</strong></div>
+            <button class="btn-sm">View Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trade-card" onclick="showScreen('profile')">
+        <div class="trade-card-banner" style="background: linear-gradient(135deg, #0277BD 0%, #4FC3F7 100%)">
+          <div class="trade-card-avatar">🧹</div>
+        </div>
+        <div class="trade-card-body">
+          <div class="trade-card-name">Priya Sharma</div>
+          <div class="trade-card-role">Domestic Cleaner · Worksop</div>
+          <div class="badges">
+            <span class="badge badge-elite">⭐ Elite</span>
+            <span class="badge badge-verified">✓ Verified</span>
+            <span class="badge badge-cert">DBS Checked</span>
+          </div>
+          <div class="trust-bar-wrap"><div class="trust-bar" style="width:94%"></div></div>
+          <div class="trade-card-stats">
+            <div class="stat-mini"><div class="stat-mini-val">4.9★</div><div class="stat-mini-label">Rating</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">201</div><div class="stat-mini-label">Jobs</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">94</div><div class="stat-mini-label">Trust</div></div>
+          </div>
+          <div class="trade-card-footer">
+            <div class="price-tag">From <strong>£18/hr</strong></div>
+            <button class="btn-sm">View Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="trade-card" onclick="showScreen('profile')">
+        <div class="trade-card-banner" style="background: linear-gradient(135deg, #880E4F 0%, #F48FB1 100%)">
+          <div class="trade-card-avatar">🎨</div>
+        </div>
+        <div class="trade-card-body">
+          <div class="trade-card-name">Jamie Walsh</div>
+          <div class="trade-card-role">Painter & Decorator · Doncaster</div>
+          <div class="badges">
+            <span class="badge badge-verified">✓ Verified</span>
+          </div>
+          <div class="trust-bar-wrap"><div class="trust-bar" style="width:79%"></div></div>
+          <div class="trade-card-stats">
+            <div class="stat-mini"><div class="stat-mini-val">4.6★</div><div class="stat-mini-label">Rating</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">38</div><div class="stat-mini-label">Jobs</div></div>
+            <div class="stat-mini"><div class="stat-mini-val">79</div><div class="stat-mini-label">Trust</div></div>
+          </div>
+          <div class="trade-card-footer">
+            <div class="price-tag">From <strong>£35/hr</strong></div>
+            <button class="btn-sm">View Profile</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="screen-profile" class="screen">
+  <div class="profile-screen">
+    <button onclick="showScreen('browse')" style="background:none; border:none; color:var(--teal); font-size:14px; font-weight:500; cursor:pointer; margin-bottom:20px; font-family:'DM Sans',sans-serif;">← Back to Browse</button>
+
+    <div class="profile-header">
+      <div class="profile-banner"></div>
+      <div class="profile-banner-content">
+        <div class="profile-avatar-lg">🔧</div>
+      </div>
+      <div class="profile-body">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div class="profile-name">Dave Hartley</div>
+            <div class="profile-role">Plumber & Gas Engineer · Worksop, S80</div>
+            <div class="badges" style="margin-top:10px;">
+              <span class="badge badge-elite">⭐ Elite Member</span>
+              <span class="badge badge-verified">✓ Verified</span>
+              <span class="badge badge-cert">Gas Safe Registered</span>
+              <span class="badge badge-cert">CIPHE Member</span>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:13px; color:var(--mid); margin-bottom:4px;">Trust Score</div>
+            <div style="font-family:'Fraunces',serif; font-size:40px; color:var(--teal); font-weight:400; line-height:1;">96</div>
+            <div style="font-size:12px; color:var(--light);">out of 100</div>
+          </div>
+        </div>
+
+        <div class="profile-stats">
+          <div><div class="profile-stat-val">4.9★</div><div class="profile-stat-label">Rating</div></div>
+          <div><div class="profile-stat-val">142</div><div class="profile-stat-label">Jobs Done</div></div>
+          <div><div class="profile-stat-val">£60</div><div class="profile-stat-label">Per Hour</div></div>
+          <div><div class="profile-stat-val">~2hr</div><div class="profile-stat-label">Response Time</div></div>
+        </div>
+
+        <p style="font-size:15px; color:var(--mid); line-height:1.7; margin-bottom:20px;">
+          Gas Safe registered plumber with 14 years experience across domestic and light commercial work. Specialise in boiler installations, bathroom fits, and emergency callouts. Based in Worksop, covering S80, S81, DN22 and surrounding areas.
+        </p>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button class="btn-primary" onclick="showToast('Request sent to Dave! He typically responds within 2 hours.', 'Message sent ✓')">Request a Quote</button>
+          <button class="btn-secondary">💬 Message Dave</button>
+          <button onclick="showToast('You\'ll get an SMS alert when Dave is available in your area.', 'Alert set ✓')" style="background:var(--amber-pale); color:#B8760E; border:1.5px solid var(--amber); padding:12px 20px; border-radius:50px; font-size:14px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif;">🔔 Set Alert</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <h3>Skills & Self-Rating</h3>
+      <div class="skill-row">
+        <div class="skill-name">Boiler Installation</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:95%"></div></div>
+        <div class="skill-level">Expert</div>
+        <span class="skill-cert">✓ Certified</span>
+      </div>
+      <div class="skill-row">
+        <div class="skill-name">Bathroom Fitting</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:90%"></div></div>
+        <div class="skill-level">Expert</div>
+        <span class="skill-cert">✓ Certified</span>
+      </div>
+      <div class="skill-row">
+        <div class="skill-name">Emergency Repairs</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:100%"></div></div>
+        <div class="skill-level">Expert</div>
+        <div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-name">Underfloor Heating</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:70%"></div></div>
+        <div class="skill-level">Proficient</div>
+        <div></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-name">Central Heating</div>
+        <div class="skill-bar-wrap"><div class="skill-bar" style="width:85%"></div></div>
+        <div class="skill-level">Advanced</div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <h3>Pricing</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div style="background:var(--bg); padding:14px 16px; border-radius:var(--radius-sm);">
+          <div style="font-size:12px; color:var(--light); margin-bottom:4px;">Callout Fee</div>
+          <div style="font-size:18px; font-weight:600; color:var(--charcoal);">£40</div>
+        </div>
+        <div style="background:var(--bg); padding:14px 16px; border-radius:var(--radius-sm);">
+          <div style="font-size:12px; color:var(--light); margin-bottom:4px;">Hourly Rate</div>
+          <div style="font-size:18px; font-weight:600; color:var(--charcoal);">£60/hr</div>
+        </div>
+        <div style="background:var(--bg); padding:14px 16px; border-radius:var(--radius-sm);">
+          <div style="font-size:12px; color:var(--light); margin-bottom:4px;">Emergency Rate</div>
+          <div style="font-size:18px; font-weight:600; color:var(--charcoal);">£90/hr</div>
+        </div>
+        <div style="background:var(--bg); padding:14px 16px; border-radius:var(--radius-sm);">
+          <div style="font-size:12px; color:var(--light); margin-bottom:4px;">Day Rate</div>
+          <div style="font-size:18px; font-weight:600; color:var(--charcoal);">£380</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <h3>Work Gallery</h3>
+      <div class="gallery-grid">
+        <div class="gallery-item" style="background:#E8F4F4;">🛁</div>
+        <div class="gallery-item" style="background:#FEF3DC;">🚿</div>
+        <div class="gallery-item" style="background:#E8F5E9;">🔥</div>
+        <div class="gallery-item" style="background:#E8F4F4;">🔧</div>
+        <div class="gallery-item" style="background:#FEF3DC;">🏠</div>
+        <div class="gallery-item" style="background:#E8F5E9;">⚙️</div>
+      </div>
+      <p style="font-size:13px; color:var(--light); margin-top:12px; text-align:center;">Gallery shows before & after photos from completed jobs</p>
+    </div>
+
+    <div class="skills-section">
+      <h3>Reviews (142)</h3>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-avatar">JM</div>
+          <div><div class="reviewer-name">James M.</div><div class="stars">★★★★★</div></div>
+          <div class="review-date">2 weeks ago</div>
+        </div>
+        <div class="review-text">Dave sorted our boiler out same day, arrived on time and explained everything clearly. Definitely using him again. Price was exactly what he quoted.</div>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-avatar">SL</div>
+          <div><div class="reviewer-name">Sandra L.</div><div class="stars">★★★★★</div></div>
+          <div class="review-date">1 month ago</div>
+        </div>
+        <div class="review-text">Brilliant job fitting our new bathroom. Tidy, professional and no hidden charges. Highly recommend to anyone in the Worksop area.</div>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-avatar">RT</div>
+          <div><div class="reviewer-name">Rob T.</div><div class="stars">★★★★☆</div></div>
+          <div class="review-date">2 months ago</div>
+        </div>
+        <div class="review-text">Good work, came when he said he would. Took slightly longer than expected but the finish was great. Would use again.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POST JOB -->
+<div id="screen-post" class="screen">
+  <div class="form-screen">
+    <h2>Post a Job</h2>
+    <p>Tell us what you need done. Verified tradespeople in your area will be notified instantly. Always free for homeowners.</p>
+
+    <div class="form-card">
+      <div class="form-group">
+        <label>What type of job is this?</label>
+        <select>
+          <option>Select a category...</option>
+          <option>Plumbing</option>
+          <option>Electrical</option>
+          <option>Building & Renovation</option>
+          <option>Cleaning</option>
+          <option>Gardening & Landscaping</option>
+          <option>Decorating</option>
+          <option>Handyman</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Describe the job</label>
+        <textarea placeholder="Tell tradespeople what needs doing, any relevant details, access info etc..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Postcode</label>
+          <input type="text" placeholder="e.g. S80 1AA">
+        </div>
+        <div class="form-group">
+          <label>Budget (optional)</label>
+          <input type="text" placeholder="e.g. £150 or 'open to quotes'">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>When do you need this done?</label>
+        <div class="urgency-chips">
+          <div class="urgency-chip selected" onclick="selectChip(this)">⚡ Urgent (today)</div>
+          <div class="urgency-chip" onclick="selectChip(this)">📅 This week</div>
+          <div class="urgency-chip" onclick="selectChip(this)">🗓️ This month</div>
+          <div class="urgency-chip" onclick="selectChip(this)">⏳ Flexible</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="First name">
+        </div>
+        <div class="form-group">
+          <label>Phone / Email</label>
+          <input type="text" placeholder="So trades can contact you">
+          <div class="form-hint">Only shared with trades you approve</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Any certification requirements?</label>
+        <select>
+          <option>No specific requirements</option>
+          <option>Gas Safe Registered</option>
+          <option>NICEIC / Part P Certified</option>
+          <option>CSCS Card Required</option>
+          <option>DBS Checked</option>
+        </select>
+        <div class="form-hint">We'll only alert trades with the right certifications</div>
+      </div>
+
+      <button class="btn-primary" style="width:100%; padding:16px;" onclick="showToast('Your job has been posted! 12 local tradespeople have been notified.', 'Job posted ✓')">Post Job — Notify Local Trades</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOBS BOARD -->
+<div id="screen-jobs" class="screen">
+  <div class="job-feed">
+    <h2>Live Jobs Board</h2>
+    <p>Real jobs posted by homeowners in your area. Set your coverage radius in your profile to only see relevant jobs.</p>
+
+    <div style="display:flex; gap:10px; margin-bottom:24px; flex-wrap:wrap;">
+      <select style="padding:10px 16px; border-radius:50px; border:1.5px solid var(--border); font-size:14px; font-family:'DM Sans',sans-serif; background:white; color:var(--charcoal); cursor:pointer; outline:none;">
+        <option>All Categories</option>
+        <option>Plumbing</option>
+        <option>Electrical</option>
+        <option>Cleaning</option>
+        <option>Gardening</option>
+      </select>
+      <select style="padding:10px 16px; border-radius:50px; border:1.5px solid var(--border); font-size:14px; font-family:'DM Sans',sans-serif; background:white; color:var(--charcoal); cursor:pointer; outline:none;">
+        <option>Any Distance</option>
+        <option>Within 5 miles</option>
+        <option>Within 10 miles</option>
+        <option>Within 20 miles</option>
+      </select>
+      <button onclick="showToast('SMS alerts enabled for new jobs matching your skills.', 'Alert active 🔔')" style="padding:10px 18px; border-radius:50px; border:1.5px solid var(--amber); background:var(--amber-pale); color:#B8760E; font-size:14px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif;">🔔 Enable Job Alerts — £10/mo</button>
+    </div>
+
+    <div class="job-card">
+      <div class="job-card-header">
+        <div>
+          <div class="job-card-title">Boiler service & annual check</div>
+          <div class="job-card-location">📍 Worksop, S80 · Posted 8 mins ago</div>
+        </div>
+        <span class="job-tag tag-urgent">⚡ Urgent</span>
+      </div>
+      <div class="job-card-desc">Annual boiler service overdue. Worcester Bosch combi, approx 6 years old. No issues currently but want it checked before winter. Gas Safe engineer required.</div>
+      <div class="job-card-footer">
+        <span class="job-meta-pill">🔧 Plumbing</span>
+        <span class="job-meta-pill">💷 ~£120</span>
+        <span class="job-meta-pill">Gas Safe required</span>
+        <button class="btn-sm" onclick="showToast('Your application has been sent. The homeowner will be in touch shortly.', 'Applied ✓')">Apply for Job</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="job-card-header">
+        <div>
+          <div class="job-card-title">Full house clean — 4 bed detached</div>
+          <div class="job-card-location">📍 Retford, DN22 · Posted 34 mins ago</div>
+        </div>
+        <span class="job-tag tag-normal">📅 This week</span>
+      </div>
+      <div class="job-card-desc">Deep clean required for 4 bed detached house before new tenants move in. End of tenancy clean. Oven, bathrooms, all rooms. Products provided if needed.</div>
+      <div class="job-card-footer">
+        <span class="job-meta-pill">🧹 Cleaning</span>
+        <span class="job-meta-pill">💷 £200–£280</span>
+        <span class="job-meta-pill">~6 hours</span>
+        <button class="btn-sm" onclick="showToast('Your application has been sent. The homeowner will be in touch shortly.', 'Applied ✓')">Apply for Job</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="job-card-header">
+        <div>
+          <div class="job-card-title">Garden clearance & tidy — overgrown</div>
+          <div class="job-card-location">📍 Mansfield, NG18 · Posted 1 hr ago</div>
+        </div>
+        <span class="job-tag tag-flexible">⏳ Flexible</span>
+      </div>
+      <div class="job-card-desc">Large rear garden completely overgrown. Needs full clearance, grass cut, hedges trimmed and waste removal. Before and after photos would be appreciated.</div>
+      <div class="job-card-footer">
+        <span class="job-meta-pill">🌿 Gardening</span>
+        <span class="job-meta-pill">💷 Open to quotes</span>
+        <span class="job-meta-pill">Waste removal needed</span>
+        <button class="btn-sm" onclick="showToast('Your application has been sent. The homeowner will be in touch shortly.', 'Applied ✓')">Apply for Job</button>
+      </div>
+    </div>
+
+    <div class="job-card">
+      <div class="job-card-header">
+        <div>
+          <div class="job-card-title">Consumer unit replacement</div>
+          <div class="job-card-location">📍 Doncaster, DN1 · Posted 2 hrs ago</div>
+        </div>
+        <span class="job-tag tag-normal">📅 This week</span>
+      </div>
+      <div class="job-card-desc">Old fuse box needs replacing with modern consumer unit. 3 bed semi, approx 8 circuits. Must be NICEIC registered and provide completion certificate.</div>
+      <div class="job-card-footer">
+        <span class="job-meta-pill">⚡ Electrical</span>
+        <span class="job-meta-pill">💷 £400–£600</span>
+        <span class="job-meta-pill">NICEIC required</span>
+        <button class="btn-sm" onclick="showToast('Your application has been sent. The homeowner will be in touch shortly.', 'Applied ✓')">Apply for Job</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PRICING -->
+<div id="screen-pricing" class="screen">
+  <div class="pricing-section">
+    <h2>Simple pricing for tradespeople</h2>
+    <p>Homeowners always post jobs for free. Tradespeople choose the plan that suits them.</p>
+
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-tier">Starter</div>
+        <div class="free-badge">First 10 — Free for Life</div>
+        <div class="pricing-price">£0</div>
+        <div class="pricing-period">forever</div>
+        <ul class="pricing-features">
+          <li>Basic profile listing</li>
+          <li>Apply for up to 5 jobs/month</li>
+          <li>Receive reviews</li>
+          <li>Zirclo verified badge</li>
+        </ul>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-tier">Professional</div>
+        <div class="pricing-price">£30</div>
+        <div class="pricing-period">per month</div>
+        <ul class="pricing-features">
+          <li>Unlimited job applications</li>
+          <li>Priority in search results</li>
+          <li>Instant job alerts (SMS)</li>
+          <li>Full skills & gallery profile</li>
+          <li>Certification upload & badge</li>
+          <li>Response time indicator</li>
+          <li>Coverage map</li>
+        </ul>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-tier">Elite</div>
+        <div class="pricing-price">£55</div>
+        <div class="pricing-period">per month</div>
+        <ul class="pricing-features">
+          <li>Everything in Professional</li>
+          <li>Featured at top of category</li>
+          <li>Elite badge on profile</li>
+          <li>Instant quote requests</li>
+          <li>Monthly performance report</li>
+          <li>Dedicated support</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top:32px; font-size:14px; color:var(--light);">Zirclo takes 0% commission on jobs. You keep everything you earn.</p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="screen-admin" class="screen">
+  <div class="admin-screen">
+    <h2>Zirclo Admin Dashboard</h2>
+
+    <div class="admin-grid">
+      <div class="admin-card">
+        <div class="admin-card-val">847</div>
+        <div class="admin-card-label">Total Tradespeople</div>
+        <div class="admin-card-delta">↑ 23 this week</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val">£25,410</div>
+        <div class="admin-card-label">Monthly Revenue</div>
+        <div class="admin-card-delta">↑ 18% vs last month</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val">3,204</div>
+        <div class="admin-card-label">Jobs Posted</div>
+        <div class="admin-card-delta">↑ 341 this week</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val">94%</div>
+        <div class="admin-card-label">Job Fill Rate</div>
+        <div class="admin-card-delta">↑ 2% vs last month</div>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <div class="admin-table-header">
+        <div class="admin-table-title">Recent Tradesperson Signups</div>
+        <button class="btn-sm">Export CSV</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Trade</th>
+            <th>Location</th>
+            <th>Trust Score</th>
+            <th>Status</th>
+            <th>Plan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Dave Hartley</strong></td>
+            <td>Plumber</td>
+            <td>Worksop, S80</td>
+            <td><span style="color:var(--teal); font-weight:600;">96</span></td>
+            <td><span class="status-pill status-active">Active</span></td>
+            <td><span class="status-pill status-pill" style="background:var(--amber-pale); color:#B8760E;">Elite</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sarah Chen</strong></td>
+            <td>Electrician</td>
+            <td>Sheffield, S1</td>
+            <td><span style="color:var(--teal); font-weight:600;">99</span></td>
+            <td><span class="status-pill status-active">Active</span></td>
+            <td><span class="status-pill" style="background:var(--teal-pale); color:var(--teal);">Pro</span></td>
+          </tr>
+          <tr>
+            <td><strong>Mark Okafor</strong></td>
+            <td>Builder</td>
+            <td>Mansfield, NG18</td>
+            <td><span style="color:var(--teal); font-weight:600;">88</span></td>
+            <td><span class="status-pill status-pending">Pending</span></td>
+            <td><span class="status-pill" style="background:var(--teal-pale); color:var(--teal);">Pro</span></td>
+          </tr>
+          <tr>
+            <td><strong>Tom Bradshaw</strong></td>
+            <td>Gardener</td>
+            <td>Retford, DN22</td>
+            <td><span style="color:var(--teal); font-weight:600;">82</span></td>
+            <td><span class="status-pill status-active">Active</span></td>
+            <td><span class="status-pill status-free">Free for Life</span></td>
+          </tr>
+          <tr>
+            <td><strong>Priya Sharma</strong></td>
+            <td>Cleaner</td>
+            <td>Worksop, S80</td>
+            <td><span style="color:var(--teal); font-weight:600;">94</span></td>
+            <td><span class="status-pill status-active">Active</span></td>
+            <td><span class="status-pill" style="background:var(--amber-pale); color:#B8760E;">Elite</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Zirclo</div>
+      <div class="footer-desc">Connecting homeowners with trusted local tradespeople across the UK. Real reviews, verified certifications, fair prices.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">For Homeowners</div>
+      <div class="footer-link">Post a Job</div>
+      <div class="footer-link">Browse Trades</div>
+      <div class="footer-link">How It Works</div>
+      <div class="footer-link">Safe Payments</div>
+    </div>
+    <div>
+      <div class="footer-col-title">For Tradespeople</div>
+      <div class="footer-link">Join Zirclo</div>
+      <div class="footer-link">Jobs Board</div>
+      <div class="footer-link">Pricing</div>
+      <div class="footer-link">Verification</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <div class="footer-link">About</div>
+      <div class="footer-link">Terms & Conditions</div>
+      <div class="footer-link">Privacy Policy</div>
+      <div class="footer-link">Contact</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Zirclo Ltd. All rights reserved.</span>
+    <span>Registered in England & Wales</span>
+  </div>
+</footer>
+
+<div class="alert-toast" id="toast">
+  <div class="alert-toast-title" id="toast-title"></div>
+  <div class="alert-toast-sub" id="toast-sub"></div>
+</div>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function filterChip(el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectChip(el) {
+  document.querySelectorAll('.urgency-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function showToast(sub, title) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-sub').textContent = sub;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+setTimeout(() => {
+  showToast('New job posted in Worksop — Boiler service needed', '🔔 New Job Alert');
+}, 3000);
+</script>
+</body>
+</html>
